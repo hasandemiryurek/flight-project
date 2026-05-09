@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model city {
+  id                               String   @id
+  city_name                        String   @unique(map: "City_city_name_key")
+  flight_flight_from_city_idTocity flight[] @relation("flight_from_city_idTocity")
+  flight_flight_to_city_idTocity   flight[] @relation("flight_to_city_idTocity")
+}
+
+model flight {
+  id                             String   @id
+  from_city_id                   String
+  to_city_id                     String
+  departure_time                 DateTime
+  arrival_time                   DateTime
+  price                          Float
+  seats_total                    Int
+  seats_available                Int
+  city_flight_from_city_idTocity city     @relation("flight_from_city_idTocity", fields: [from_city_id], references: [id], map: "Flight_from_city_id_fkey")
+  city_flight_to_city_idTocity   city     @relation("flight_to_city_idTocity", fields: [to_city_id], references: [id], map: "Flight_to_city_id_fkey")
+  ticket                         ticket[]
+
+  @@index([from_city_id], map: "Flight_from_city_id_fkey")
+  @@index([to_city_id], map: "Flight_to_city_id_fkey")
+}
+
+model ticket {
+  id                String  @id
+  passenger_name    String
+  passenger_surname String
+  passenger_email   String
+  flight_id         String
+  seat_number       String?
+  flight            flight  @relation(fields: [flight_id], references: [id], map: "Ticket_flight_id_fkey")
+
+  @@index([flight_id], map: "Ticket_flight_id_fkey")
+}
