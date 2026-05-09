@@ -42,3 +42,9 @@ model ticket {
 
   @@index([flight_id], map: "Ticket_flight_id_fkey")
 }
+
+model admin {
+  id       String @id
+  username String @unique
+  password String
+}

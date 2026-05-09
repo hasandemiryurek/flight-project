@@ -1,0 +1,290 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { fetchCities, searchFlights } from '../api';
+
+const formatTime = (dt) => new Date(dt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+const formatDate = (dt) => new Date(dt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+const duration = (dep, arr) => {
+    const diff = new Date(arr) - new Date(dep);
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    return `${h}s ${m}dk`;
+};
+
+export default function HomePage() {
+    const navigate = useNavigate();
+    const [cities, setCities] = useState([]);
+    const [fromCity, setFromCity] = useState('');
+    const [toCity, setToCity] = useState('');
+    const [date, setDate] = useState('');
+    const [flights, setFlights] = useState([]);
+    const [searched, setSearched] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        fetchCities().then(setCities).catch(() => setError('Şehirler yüklenemedi.'));
+    }, []);
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        if (!fromCity || !toCity) { setError('Lütfen kalkış ve varış şehrini seçin.'); return; }
+        if (fromCity === toCity) { setError('Kalkış ve varış şehri aynı olamaz.'); return; }
+        setError('');
+        setLoading(true);
+        try {
+            const data = await searchFlights({ from: fromCity, to: toCity, date });
+            setFlights(data);
+            setSearched(true);
+        } catch {
+            setError('Uçuşlar aranırken bir hata oluştu.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const swap = () => { setFromCity(toCity); setToCity(fromCity); };
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <div className="relative">
+                <div
+                    className="h-[480px] bg-cover bg-center"
+                    style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop")' }}
+                >
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#001b48]/70 to-[#001b48]/30" />
+                </div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-2 drop-shadow-lg">
+                        Hayalinizdeki Uçuşu Bulun
+                    </h1>
+                    <p className="text-white/80 text-lg mb-8 text-center">Türkiye'nin 81 şehrine uygun fiyatlı biletler</p>
+
+                    <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-6">
+                        <form onSubmit={handleSearch}>
+                            <div className="flex flex-col md:flex-row gap-3 items-end">
+                                <div className="flex-1 w-full">
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Nereden</label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#001b48]">✈</span>
+                                        <select
+                                            className="w-full pl-8 pr-4 py-3 border-2 border-gray-200 rounded-xl text-[#001b48] font-semibold focus:border-[#001b48] focus:outline-none bg-white transition"
+                                            value={fromCity}
+                                            onChange={e => setFromCity(e.target.value)}
+                                        >
+                                            <option value="">Şehir seçin</option>
+                                            {cities.map(c => <option key={c.id} value={c.id}>{c.city_name}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={swap}
+                                    className="hidden md:flex items-center justify-center w-10 h-10 bg-[#001b48] text-white rounded-full hover:bg-[#002a6e] transition flex-shrink-0 mb-1"
+                                >
+                                    ⇄
+                                </button>
+
+                                <div className="flex-1 w-full">
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Nereye</label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#ffbc00]">✈</span>
+                                        <select
+                                            className="w-full pl-8 pr-4 py-3 border-2 border-gray-200 rounded-xl text-[#001b48] font-semibold focus:border-[#001b48] focus:outline-none bg-white transition"
+                                            value={toCity}
+                                            onChange={e => setToCity(e.target.value)}
+                                        >
+                                            <option value="">Şehir seçin</option>
+                                            {cities.map(c => <option key={c.id} value={c.id}>{c.city_name}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="flex-1 w-full">
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Tarih</label>
+                                    <input
+                                        type="date"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-[#001b48] font-semibold focus:border-[#001b48] focus:outline-none bg-white transition"
+                                        value={date}
+                                        onChange={e => setDate(e.target.value)}
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full md:w-auto bg-[#ffbc00] hover:bg-[#e6a800] text-[#001b48] font-bold px-8 py-3 rounded-xl transition text-sm uppercase tracking-wider shadow-md disabled:opacity-60 flex-shrink-0"
+                                >
+                                    {loading ? 'Aranıyor...' : 'Uçuş Ara'}
+                                </button>
+                            </div>
+
+                            {error && (
+                                <p className="mt-3 text-red-500 text-sm font-medium text-center">{error}</p>
+                            )}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div className="max-w-4xl mx-auto px-4 py-10">
+                {searched && (
+                    <>
+                        <h2 className="text-2xl font-bold text-[#001b48] mb-6">
+                            {flights.length > 0 ? `${flights.length} uçuş bulundu` : 'Sonuç bulunamadı'}
+                        </h2>
+                        {flights.length === 0 && (
+                            <div className="text-center py-16 text-gray-400">
+                                <div className="text-6xl mb-4">✈</div>
+                                <p className="text-lg">Bu kriterlere uygun uçuş bulunamadı.</p>
+                                <p className="text-sm mt-1">Farklı tarih veya şehir deneyin.</p>
+                            </div>
+                        )}
+                        <div className="flex flex-col gap-4">
+                            {flights.map(flight => (
+                                <FlightCard key={flight.id} flight={flight} onClick={() => navigate(`/booking/${flight.id}`)} />
+                            ))}
+                        </div>
+                    </>
+                )}
+
+                {!searched && (
+                    <div className="mt-4">
+  <h2 className="text-3xl font-bold text-[#001b48]">
+    Popüler Rotalar
+  </h2>
+
+  <p className="text-gray-600 mb-8">
+    En popüler uçuş noktalarını keşfet
+  </p>
+
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    {/* SOL BÜYÜK KART - İSTANBUL */}
+    <div className="relative h-[600px] rounded-3xl overflow-hidden group cursor-pointer">
+      <img
+        src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200"
+        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
+      <div className="absolute bottom-6 left-6 text-white">
+        <p className="text-lg">Türkiye</p>
+        <h3 className="text-4xl font-bold">İstanbul</h3>
+      </div>
+    </div>
+
+    {/* SAĞ TARAF */}
+    <div className="flex flex-col gap-6">
+
+      {/* ÜST GENİŞ - ANTALYA */}
+      <div className="relative h-[290px] rounded-3xl overflow-hidden group cursor-pointer">
+        <img
+          src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200"
+          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
+        <div className="absolute bottom-6 left-6 text-white">
+          <p className="text-lg">Türkiye</p>
+          <h3 className="text-3xl font-bold">Antalya</h3>
+        </div>
+      </div>
+
+      {/* ALT 2 KART */}
+      <div className="grid grid-cols-2 gap-6">
+
+        {/* İZMİR */}
+        <div className="relative h-[290px] rounded-3xl overflow-hidden group cursor-pointer">
+          <img
+            src="https://images.unsplash.com/photo-1589561253898-768105ca91a8?q=80&w=1200"
+            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
+          <div className="absolute bottom-6 left-6 text-white">
+            <p className="text-lg">Türkiye</p>
+            <h3 className="text-3xl font-bold">İzmir</h3>
+          </div>
+        </div>
+
+        {/* ANKARA */}
+        <div className="relative h-[290px] rounded-3xl overflow-hidden group cursor-pointer">
+          <img
+            src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?q=80&w=1200"
+            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
+          <div className="absolute bottom-6 left-6 text-white">
+            <p className="text-lg">Türkiye</p>
+            <h3 className="text-3xl font-bold">Ankara</h3>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <button className="mt-8 bg-[#dfe6f5] px-6 py-3 rounded-lg font-medium hover:bg-[#cfd8ee] transition">
+    Tüm Rotaları Keşfet
+  </button>
+</div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function FlightCard({ flight, onClick }) {
+    const from = flight.city_flight_from_city_idTocity?.city_name || '';
+    const to = flight.city_flight_to_city_idTocity?.city_name || '';
+    return (
+        <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-5 flex flex-col md:flex-row items-center gap-4 border border-gray-100">
+            <div className="flex-1 flex items-center gap-4 w-full">
+                <div className="text-center">
+                    <p className="text-2xl font-bold text-[#001b48]">{formatTime(flight.departure_time)}</p>
+                    <p className="text-sm text-gray-500 font-medium">{from}</p>
+                </div>
+                <div className="flex-1 flex flex-col items-center">
+                    <p className="text-xs text-gray-400 mb-1">{duration(flight.departure_time, flight.arrival_time)}</p>
+                    <div className="w-full flex items-center">
+                        <div className="w-2 h-2 rounded-full bg-[#001b48]" />
+                        <div className="flex-1 h-px bg-gray-300 mx-1" />
+                        <span className="text-[#ffbc00] text-lg">✈</span>
+                        <div className="flex-1 h-px bg-gray-300 mx-1" />
+                        <div className="w-2 h-2 rounded-full bg-[#ffbc00]" />
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">{formatDate(flight.departure_time)}</p>
+                </div>
+                <div className="text-center">
+                    <p className="text-2xl font-bold text-[#001b48]">{formatTime(flight.arrival_time)}</p>
+                    <p className="text-sm text-gray-500 font-medium">{to}</p>
+                </div>
+            </div>
+
+            <div className="flex md:flex-col items-center gap-4 md:gap-1 flex-shrink-0">
+                <div className="text-center">
+                    <p className="text-3xl font-bold text-[#001b48]">{flight.price.toLocaleString('tr-TR')} ₺</p>
+                    <p className="text-xs text-gray-400">kişi başı</p>
+                </div>
+                <div className={`text-xs font-semibold px-2 py-1 rounded-full ${flight.seats_available > 10 ? 'bg-green-100 text-green-700' : flight.seats_available > 0 ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700'}`}>
+                    {flight.seats_available > 0 ? `${flight.seats_available} koltuk` : 'Dolu'}
+                </div>
+            </div>
+
+            <button
+                onClick={onClick}
+                disabled={flight.seats_available === 0}
+                className="bg-[#ffbc00] hover:bg-[#e6a800] text-[#001b48] font-bold px-6 py-3 rounded-xl transition text-sm uppercase tracking-wider shadow disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+            >
+                Satın Al
+            </button>
+        </div>
+    );
+}
