@@ -164,7 +164,7 @@ export default function HomePage() {
     {/* SOL BÜYÜK KART - İSTANBUL */}
     <div className="relative h-[600px] rounded-3xl overflow-hidden group cursor-pointer">
       <img
-        src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200"
+        src="https://i.pinimg.com/1200x/cb/41/82/cb4182ca7b8e815f2237a3c9859c4796.jpg"
         className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
       />
 
@@ -172,7 +172,7 @@ export default function HomePage() {
 
       <div className="absolute bottom-6 left-6 text-white">
         <p className="text-lg">Turkey</p>
-        <h3 className="text-4xl font-bold">Istanbul</h3>
+        <h3 className="text-4xl font-bold">Ankara</h3>
       </div>
     </div>
 
@@ -182,7 +182,7 @@ export default function HomePage() {
       {/* ÜST GENİŞ - ANTALYA */}
       <div className="relative h-[290px] rounded-3xl overflow-hidden group cursor-pointer">
         <img
-          src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200"
+          src="https://i.pinimg.com/736x/98/72/24/987224b0e091918557791fd5df149413.jpg"
           className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
         />
 
@@ -200,7 +200,7 @@ export default function HomePage() {
         {/* İZMİR */}
         <div className="relative h-[290px] rounded-3xl overflow-hidden group cursor-pointer">
           <img
-            src="https://images.unsplash.com/photo-1589561253898-768105ca91a8?q=80&w=1200"
+            src="https://i.pinimg.com/1200x/80/bf/53/80bf53c05262ca99d3e025be8879e575.jpg"
             className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
           />
 
@@ -215,7 +215,7 @@ export default function HomePage() {
         {/* ANKARA */}
         <div className="relative h-[290px] rounded-3xl overflow-hidden group cursor-pointer">
           <img
-            src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?q=80&w=1200"
+            src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200"
             className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
           />
 
@@ -223,7 +223,7 @@ export default function HomePage() {
 
           <div className="absolute bottom-6 left-6 text-white">
             <p className="text-lg">Turkey</p>
-            <h3 className="text-3xl font-bold">Ankara</h3>
+            <h3 className="text-3xl font-bold">Istanbul</h3>
           </div>
         </div>
 

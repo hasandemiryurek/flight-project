@@ -11,8 +11,8 @@ export default function ConfirmationPage() {
     if (!ticket) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-                <p className="text-gray-500 text-lg">Bilet bilgisi bulunamadı.</p>
-                <Link to="/" className="bg-[#ffbc00] text-[#001b48] font-bold px-6 py-3 rounded-xl">Ana Sayfaya Dön</Link>
+                <p className="text-gray-500 text-lg">Ticket information not found.</p>
+                <Link to="/" className="bg-[#ffbc00] text-[#001b48] font-bold px-6 py-3 rounded-xl">Return to Home Page</Link>
             </div>
         );
     }
@@ -28,14 +28,14 @@ export default function ConfirmationPage() {
                     <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
                         <span className="text-4xl">✓</span>
                     </div>
-                    <h1 className="text-3xl font-bold text-[#001b48]">Rezervasyon Onaylandı!</h1>
-                    <p className="text-gray-500 mt-2">Biletiniz başarıyla oluşturuldu. İyi uçuşlar!</p>
+                    <h1 className="text-3xl font-bold text-[#001b48]">Reservation Confirmed!</h1>
+                    <p className="text-gray-500 mt-2">Your ticket has been created successfully. Have a great flight!</p>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100" id="ticket">
                     <div className="bg-[#001b48] px-6 py-4 flex items-center justify-between">
                         <span className="text-[#ffbc00] font-bold text-xl">✈ FlyTicket</span>
-                        <span className="text-white/60 text-sm font-mono">Bilet No: {ticket.id?.slice(-8).toUpperCase()}</span>
+                        <span className="text-white/60 text-sm font-mono">Ticket No: {ticket.id?.slice(-8).toUpperCase()}</span>
                     </div>
 
                     <div className="px-6 py-6">
@@ -99,13 +99,13 @@ export default function ConfirmationPage() {
                         onClick={() => window.print()}
                         className="flex-1 border-2 border-[#001b48] text-[#001b48] font-bold py-3 rounded-xl hover:bg-[#001b48] hover:text-white transition text-center"
                     >
-                        E-Bilet İndir / Yazdır
+                        Download / Print E-Ticket
                     </button>
                     <button
                         onClick={() => navigate('/')}
                         className="flex-1 bg-[#ffbc00] hover:bg-[#e6a800] text-[#001b48] font-bold py-3 rounded-xl transition text-center"
                     >
-                        Ana Sayfaya Dön
+                        Return to Home Page
                     </button>
                 </div>
             </div>

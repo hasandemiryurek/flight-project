@@ -42,7 +42,7 @@ export default function AdminDashboardPage() {
             setFlights(prev => prev.filter(f => f.id !== id));
             setTickets(prev => prev.filter(t => t.flight_id !== id));
         } catch (e) {
-            alert(e.message || 'Silinemedi.');
+            alert(e.message || 'Could not delete flight.');
         } finally {
             setDeleting(false);
             setDeleteId(null);
@@ -237,7 +237,7 @@ function TicketsTable({ tickets }) {
     if (tickets.length === 0) return (
         <div className="text-center py-20 text-gray-400">
             <div className="text-5xl mb-3">🎫</div>
-            <p>Henüz bilet bulunmuyor.</p>
+            <p>No tickets found.</p>
         </div>
     );
     return (
@@ -246,11 +246,11 @@ function TicketsTable({ tickets }) {
                 <table className="w-full text-sm">
                     <thead>
                         <tr className="bg-gray-50 border-b border-gray-100">
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Yolcu</th>
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">E-posta</th>
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Uçuş</th>
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Tarih</th>
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Koltuk</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Passenger</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Email</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Flight</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Date</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Seat</th>
                         </tr>
                     </thead>
                     <tbody>
