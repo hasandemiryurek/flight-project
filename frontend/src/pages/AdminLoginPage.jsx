@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!username || !password) { setError('Kullanıcı adı ve şifre gerekli.'); return; }
+        if (!username || !password) { setError('Username and password are required.'); return; }
         setError('');
         setLoading(true);
         try {
@@ -21,7 +21,7 @@ export default function AdminLoginPage() {
             login(data.token, data.username);
             navigate('/admin');
         } catch (err) {
-            setError(err.message || 'Giriş başarısız. Bilgilerinizi kontrol edin.');
+            setError(err.message || 'Login failed. Please check your credentials.');
         } finally {
             setLoading(false);
         }
@@ -32,13 +32,13 @@ export default function AdminLoginPage() {
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
                     <span className="text-4xl font-bold text-[#ffbc00]">✈ FlyTicket</span>
-                    <p className="text-white/60 mt-2 text-sm">Admin Paneli</p>
+                    <p className="text-white/60 mt-2 text-sm">Admin Panel</p>
                 </div>
                 <div className="bg-white rounded-2xl shadow-2xl p-8">
-                    <h1 className="text-2xl font-bold text-[#001b48] mb-6 text-center">Giriş Yap</h1>
+                    <h1 className="text-2xl font-bold text-[#001b48] mb-6 text-center">Login</h1>
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-600 mb-1">Kullanıcı Adı</label>
+                            <label className="block text-sm font-semibold text-gray-600 mb-1">Username</label>
                             <input
                                 type="text"
                                 placeholder="admin"
@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-600 mb-1">Şifre</label>
+                            <label className="block text-sm font-semibold text-gray-600 mb-1">Password</label>
                             <input
                                 type="password"
                                 placeholder="••••••••"
@@ -69,12 +69,12 @@ export default function AdminLoginPage() {
                             disabled={loading}
                             className="w-full bg-[#ffbc00] hover:bg-[#e6a800] text-[#001b48] font-bold py-3 rounded-xl transition uppercase tracking-wider mt-2 disabled:opacity-60"
                         >
-                            {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
+                            {loading ? 'Logging in...' : 'Login'}
                         </button>
                     </form>
                 </div>
                 <p className="text-center text-white/40 text-xs mt-6">
-                    Varsayılan: admin / admin123
+                    Default: admin / admin123
                 </p>
             </div>
         </div>

@@ -5,22 +5,22 @@ const { v4: uuidv4 } = require('uuid');
 const prisma = new PrismaClient();
 
 const CITIES = [
-    'Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Amasya',
-    'Ankara', 'Antalya', 'Artvin', 'Aydın', 'Balıkesir',
-    'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur',
-    'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli',
-    'Diyarbakır', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum',
-    'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari',
-    'Hatay', 'Isparta', 'Mersin', 'İstanbul', 'İzmir',
-    'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir',
-    'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa',
-    'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş', 'Nevşehir',
-    'Niğde', 'Ordu', 'Rize', 'Sakarya', 'Samsun',
-    'Siirt', 'Sinop', 'Sivas', 'Tekirdağ', 'Tokat',
-    'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak', 'Van',
+    'Adana', 'Adiyaman', 'Afyonkarahisar', 'Agri', 'Amasya',
+    'Ankara', 'Antalya', 'Artvin', 'Aydin', 'Balikesir',
+    'Bilecik', 'Bingol', 'Bitlis', 'Bolu', 'Burdur',
+    'Bursa', 'Canakkale', 'Cankiri', 'Corum', 'Denizli',
+    'Diyarbakir', 'Edirne', 'Elazig', 'Erzincan', 'Erzurum',
+    'Eskisehir', 'Gaziantep', 'Giresun', 'Gumushane', 'Hakkari',
+    'Hatay', 'Isparta', 'Mersin', 'Istanbul', 'Izmir',
+    'Kars', 'Kastamonu', 'Kayseri', 'Kirklareli', 'Kirsehir',
+    'Kocaeli', 'Konya', 'Kutahya', 'Malatya', 'Manisa',
+    'Kahramanmaras', 'Mardin', 'Mugla', 'Mus', 'Nevsehir',
+    'Nigde', 'Ordu', 'Rize', 'Sakarya', 'Samsun',
+    'Siirt', 'Sinop', 'Sivas', 'Tekirdag', 'Tokat',
+    'Trabzon', 'Tunceli', 'Sanliurfa', 'Usak', 'Van',
     'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman',
-    'Kırıkkale', 'Batman', 'Şırnak', 'Bartın', 'Ardahan',
-    'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'
+    'Kirikkale', 'Batman', 'Sirnak', 'Bartin', 'Ardahan',
+    'Igdir', 'Yalova', 'Karabuk', 'Kilis', 'Osmaniye', 'Duzce'
 ];
 
 async function main() {
@@ -52,26 +52,26 @@ async function main() {
     tomorrow.setHours(0, 0, 0, 0);
 
     const sampleFlights = [
-        { from: 'İstanbul', to: 'Ankara',     depH: 6,  arrH: 7,  price: 850,  seats: 180 },
-        { from: 'İstanbul', to: 'İzmir',      depH: 8,  arrH: 9,  price: 950,  seats: 160 },
-        { from: 'İstanbul', to: 'Antalya',    depH: 10, arrH: 11, price: 1100, seats: 200 },
-        { from: 'İstanbul', to: 'Trabzon',    depH: 12, arrH: 13, price: 1200, seats: 140 },
-        { from: 'Ankara',   to: 'İstanbul',   depH: 7,  arrH: 8,  price: 850,  seats: 180 },
-        { from: 'Ankara',   to: 'İzmir',      depH: 9,  arrH: 10, price: 900,  seats: 150 },
+        { from: 'Istanbul', to: 'Ankara',     depH: 6,  arrH: 7,  price: 850,  seats: 180 },
+        { from: 'Istanbul', to: 'Izmir',      depH: 8,  arrH: 9,  price: 950,  seats: 160 },
+        { from: 'Istanbul', to: 'Antalya',    depH: 10, arrH: 11, price: 1100, seats: 200 },
+        { from: 'Istanbul', to: 'Trabzon',    depH: 12, arrH: 13, price: 1200, seats: 140 },
+        { from: 'Ankara',   to: 'Istanbul',   depH: 7,  arrH: 8,  price: 850,  seats: 180 },
+        { from: 'Ankara',   to: 'Izmir',      depH: 9,  arrH: 10, price: 900,  seats: 150 },
         { from: 'Ankara',   to: 'Antalya',    depH: 11, arrH: 12, price: 1000, seats: 170 },
-        { from: 'İzmir',    to: 'İstanbul',   depH: 8,  arrH: 9,  price: 950,  seats: 160 },
-        { from: 'İzmir',    to: 'Ankara',     depH: 10, arrH: 11, price: 900,  seats: 150 },
-        { from: 'İzmir',    to: 'Antalya',    depH: 14, arrH: 15, price: 750,  seats: 130 },
-        { from: 'Antalya',  to: 'İstanbul',   depH: 7,  arrH: 8,  price: 1100, seats: 200 },
+        { from: 'Izmir',    to: 'Istanbul',   depH: 8,  arrH: 9,  price: 950,  seats: 160 },
+        { from: 'Izmir',    to: 'Ankara',     depH: 10, arrH: 11, price: 900,  seats: 150 },
+        { from: 'Izmir',    to: 'Antalya',    depH: 14, arrH: 15, price: 750,  seats: 130 },
+        { from: 'Antalya',  to: 'Istanbul',   depH: 7,  arrH: 8,  price: 1100, seats: 200 },
         { from: 'Antalya',  to: 'Ankara',     depH: 9,  arrH: 10, price: 1000, seats: 170 },
-        { from: 'Trabzon',  to: 'İstanbul',   depH: 6,  arrH: 7,  price: 1200, seats: 140 },
+        { from: 'Trabzon',  to: 'Istanbul',   depH: 6,  arrH: 7,  price: 1200, seats: 140 },
         { from: 'Trabzon',  to: 'Ankara',     depH: 8,  arrH: 9,  price: 1100, seats: 120 },
-        { from: 'Samsun',   to: 'İstanbul',   depH: 7,  arrH: 8,  price: 1050, seats: 130 },
-        { from: 'Gaziantep',to: 'İstanbul',   depH: 6,  arrH: 7,  price: 1300, seats: 150 },
-        { from: 'Diyarbakır',to:'İstanbul',   depH: 7,  arrH: 8,  price: 1400, seats: 140 },
-        { from: 'Kayseri',  to: 'İstanbul',   depH: 8,  arrH: 9,  price: 900,  seats: 160 },
+        { from: 'Samsun',   to: 'Istanbul',   depH: 7,  arrH: 8,  price: 1050, seats: 130 },
+        { from: 'Gaziantep',to: 'Istanbul',   depH: 6,  arrH: 7,  price: 1300, seats: 150 },
+        { from: 'Diyarbakir',to:'Istanbul',   depH: 7,  arrH: 8,  price: 1400, seats: 140 },
+        { from: 'Kayseri',  to: 'Istanbul',   depH: 8,  arrH: 9,  price: 900,  seats: 160 },
         { from: 'Erzurum',  to: 'Ankara',     depH: 7,  arrH: 8,  price: 1350, seats: 120 },
-        { from: 'Van',      to: 'İstanbul',   depH: 6,  arrH: 7,  price: 1500, seats: 130 },
+        { from: 'Van',      to: 'Istanbul',   depH: 6,  arrH: 7,  price: 1500, seats: 130 },
     ];
 
     let flightCount = 0;

@@ -19,17 +19,17 @@ export default function Navbar() {
                         <span className="text-2xl font-bold tracking-wider text-[#ffbc00]">✈ FlyTicket</span>
                     </Link>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-8">
                         {isAdmin ? (
                             <>
                                 <Link to="/admin" className="text-[#ffbc00] font-semibold text-sm hover:text-white transition hidden md:block">
-                                    Admin Paneli
+                                    Admin Panel
                                 </Link>
                                 <button
                                     onClick={handleLogout}
                                     className="border border-white/30 hover:border-[#ffbc00] hover:text-[#ffbc00] px-4 py-1.5 rounded-lg transition font-medium text-sm"
                                 >
-                                    Çıkış
+                                    Log Out
                                 </button>
                             </>
                         ) : (
@@ -37,7 +37,7 @@ export default function Navbar() {
                                 to="/admin/login"
                                 className="border border-white/30 hover:border-[#ffbc00] hover:text-[#ffbc00] px-4 py-1.5 rounded-lg transition font-medium text-sm"
                             >
-                                Admin Girişi
+                                Admin Login
                             </Link>
                         )}
                         <button
@@ -52,9 +52,9 @@ export default function Navbar() {
 
             {menuOpen && (
                 <div className="md:hidden bg-[#002a6e] px-4 py-3 flex flex-col gap-2 border-t border-white/10">
-                    <Link to="/" className="text-white hover:text-[#ffbc00] py-1 font-medium" onClick={() => setMenuOpen(false)}>Uçuş Ara</Link>
+                    <Link to="/" className="text-white hover:text-[#ffbc00] py-1 font-medium" onClick={() => setMenuOpen(false)}>Search Flights</Link>
                     {isAdmin && (
-                        <Link to="/admin" className="text-[#ffbc00] hover:text-white py-1 font-medium" onClick={() => setMenuOpen(false)}>Admin Paneli</Link>
+                        <Link to="/admin" className="text-[#ffbc00] hover:text-white py-1 font-medium" onClick={() => setMenuOpen(false)}>Admin Panel</Link>
                     )}
                 </div>
             )}

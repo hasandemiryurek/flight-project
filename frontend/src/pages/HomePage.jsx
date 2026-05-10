@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCities, searchFlights } from '../api';
 
-const formatTime = (dt) => new Date(dt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-const formatDate = (dt) => new Date(dt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+const formatTime = (dt) => new Date(dt).toString('en-US', { hour: '2-digit', minute: '2-digit' });
+const formatDate = (dt) => new Date(dt).toString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
 const duration = (dep, arr) => {
     const diff = new Date(arr) - new Date(dep);
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
-    return `${h}s ${m}dk`;
+    return `${h}h ${m}m`;
 };
 
 export default function HomePage() {
@@ -23,13 +23,13 @@ export default function HomePage() {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        fetchCities().then(setCities).catch(() => setError('Şehirler yüklenemedi.'));
+        fetchCities().then(setCities).catch(() => setError('Could not load cities.'));
     }, []);
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        if (!fromCity || !toCity) { setError('Lütfen kalkış ve varış şehrini seçin.'); return; }
-        if (fromCity === toCity) { setError('Kalkış ve varış şehri aynı olamaz.'); return; }
+        if (!fromCity || !toCity) { setError('Please select departure and arrival cities.'); return; }
+        if (fromCity === toCity) { setError('Departure and arrival cities cannot be the same.'); return; }
         setError('');
         setLoading(true);
         try {
@@ -37,7 +37,7 @@ export default function HomePage() {
             setFlights(data);
             setSearched(true);
         } catch {
-            setError('Uçuşlar aranırken bir hata oluştu.');
+            setError('An error occurred while searching for flights.');
         } finally {
             setLoading(false);
         }
@@ -56,23 +56,23 @@ export default function HomePage() {
                 </div>
                 <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
                     <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-2 drop-shadow-lg">
-                        Hayalinizdeki Uçuşu Bulun
+                        Find Your Dream Flight
                     </h1>
-                    <p className="text-white/80 text-lg mb-8 text-center">Türkiye'nin 81 şehrine uygun fiyatlı biletler</p>
+                    <p className="text-white/80 text-lg mb-8 text-center">Affordable tickets to 81 cities in Turkey</p>
 
                     <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-6">
                         <form onSubmit={handleSearch}>
                             <div className="flex flex-col md:flex-row gap-3 items-end">
                                 <div className="flex-1 w-full">
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Nereden</label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">From</label>
                                     <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#001b48]">✈</span>
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#001b48]"></span>
                                         <select
                                             className="w-full pl-8 pr-4 py-3 border-2 border-gray-200 rounded-xl text-[#001b48] font-semibold focus:border-[#001b48] focus:outline-none bg-white transition"
                                             value={fromCity}
                                             onChange={e => setFromCity(e.target.value)}
                                         >
-                                            <option value="">Şehir seçin</option>
+                                            <option value="">Select a city</option>
                                             {cities.map(c => <option key={c.id} value={c.id}>{c.city_name}</option>)}
                                         </select>
                                     </div>
@@ -87,22 +87,22 @@ export default function HomePage() {
                                 </button>
 
                                 <div className="flex-1 w-full">
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Nereye</label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">To</label>
                                     <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#ffbc00]">✈</span>
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#ffbc00]"></span>
                                         <select
                                             className="w-full pl-8 pr-4 py-3 border-2 border-gray-200 rounded-xl text-[#001b48] font-semibold focus:border-[#001b48] focus:outline-none bg-white transition"
                                             value={toCity}
                                             onChange={e => setToCity(e.target.value)}
                                         >
-                                            <option value="">Şehir seçin</option>
+                                            <option value="">Select a city</option>
                                             {cities.map(c => <option key={c.id} value={c.id}>{c.city_name}</option>)}
                                         </select>
                                     </div>
                                 </div>
 
                                 <div className="flex-1 w-full">
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Tarih</label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Date</label>
                                     <input
                                         type="date"
                                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-[#001b48] font-semibold focus:border-[#001b48] focus:outline-none bg-white transition"
@@ -116,7 +116,7 @@ export default function HomePage() {
                                     disabled={loading}
                                     className="w-full md:w-auto bg-[#ffbc00] hover:bg-[#e6a800] text-[#001b48] font-bold px-8 py-3 rounded-xl transition text-sm uppercase tracking-wider shadow-md disabled:opacity-60 flex-shrink-0"
                                 >
-                                    {loading ? 'Aranıyor...' : 'Uçuş Ara'}
+                                    {loading ? 'Searching...' : 'Search Flights'}
                                 </button>
                             </div>
 
@@ -132,13 +132,13 @@ export default function HomePage() {
                 {searched && (
                     <>
                         <h2 className="text-2xl font-bold text-[#001b48] mb-6">
-                            {flights.length > 0 ? `${flights.length} uçuş bulundu` : 'Sonuç bulunamadı'}
+                            {flights.length > 0 ? `${flights.length} flights found` : 'No results found'}
                         </h2>
                         {flights.length === 0 && (
                             <div className="text-center py-16 text-gray-400">
                                 <div className="text-6xl mb-4">✈</div>
-                                <p className="text-lg">Bu kriterlere uygun uçuş bulunamadı.</p>
-                                <p className="text-sm mt-1">Farklı tarih veya şehir deneyin.</p>
+                                <p className="text-lg">No flights found for these criteria.</p>
+                                <p className="text-sm mt-1">Try a different date or city.</p>
                             </div>
                         )}
                         <div className="flex flex-col gap-4">
@@ -152,11 +152,11 @@ export default function HomePage() {
                 {!searched && (
                     <div className="mt-4">
   <h2 className="text-3xl font-bold text-[#001b48]">
-    Popüler Rotalar
+    Popular Routes
   </h2>
 
   <p className="text-gray-600 mb-8">
-    En popüler uçuş noktalarını keşfet
+    Discover the most popular flight destinations
   </p>
 
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -171,8 +171,8 @@ export default function HomePage() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
       <div className="absolute bottom-6 left-6 text-white">
-        <p className="text-lg">Türkiye</p>
-        <h3 className="text-4xl font-bold">İstanbul</h3>
+        <p className="text-lg">Turkey</p>
+        <h3 className="text-4xl font-bold">Istanbul</h3>
       </div>
     </div>
 
@@ -189,7 +189,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
         <div className="absolute bottom-6 left-6 text-white">
-          <p className="text-lg">Türkiye</p>
+          <p className="text-lg">Turkey</p>
           <h3 className="text-3xl font-bold">Antalya</h3>
         </div>
       </div>
@@ -207,8 +207,8 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
           <div className="absolute bottom-6 left-6 text-white">
-            <p className="text-lg">Türkiye</p>
-            <h3 className="text-3xl font-bold">İzmir</h3>
+            <p className="text-lg">Turkey</p>
+            <h3 className="text-3xl font-bold">Izmir</h3>
           </div>
         </div>
 
@@ -222,7 +222,7 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
           <div className="absolute bottom-6 left-6 text-white">
-            <p className="text-lg">Türkiye</p>
+            <p className="text-lg">Turkey</p>
             <h3 className="text-3xl font-bold">Ankara</h3>
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function HomePage() {
   </div>
 
   <button className="mt-8 bg-[#dfe6f5] px-6 py-3 rounded-lg font-medium hover:bg-[#cfd8ee] transition">
-    Tüm Rotaları Keşfet
+    Discover All Routes
   </button>
 </div>
                 )}
@@ -270,11 +270,11 @@ function FlightCard({ flight, onClick }) {
 
             <div className="flex md:flex-col items-center gap-4 md:gap-1 flex-shrink-0">
                 <div className="text-center">
-                    <p className="text-3xl font-bold text-[#001b48]">{flight.price.toLocaleString('tr-TR')} ₺</p>
-                    <p className="text-xs text-gray-400">kişi başı</p>
+                    <p className="text-3xl font-bold text-[#001b48]">{flight.price.toLocaleString('en-US')} ₺</p>
+                    <p className="text-xs text-gray-400">per person</p>
                 </div>
                 <div className={`text-xs font-semibold px-2 py-1 rounded-full ${flight.seats_available > 10 ? 'bg-green-100 text-green-700' : flight.seats_available > 0 ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700'}`}>
-                    {flight.seats_available > 0 ? `${flight.seats_available} koltuk` : 'Dolu'}
+                    {flight.seats_available > 0 ? `${flight.seats_available} seats` : 'Full'}
                 </div>
             </div>
 
@@ -283,7 +283,7 @@ function FlightCard({ flight, onClick }) {
                 disabled={flight.seats_available === 0}
                 className="bg-[#ffbc00] hover:bg-[#e6a800] text-[#001b48] font-bold px-6 py-3 rounded-xl transition text-sm uppercase tracking-wider shadow disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
             >
-                Satın Al
+                Buy
             </button>
         </div>
     );

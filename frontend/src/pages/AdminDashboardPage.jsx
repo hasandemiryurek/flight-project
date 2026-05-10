@@ -70,28 +70,32 @@ export default function AdminDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="bg-[#001b48] text-white px-6 py-4 flex items-center justify-between shadow-lg">
-                <div className="flex items-center gap-3">
-                    <span className="text-[#ffbc00] font-bold text-xl">✈ FlyTicket</span>
-                    <span className="text-white/40">|</span>
-                    <span className="text-white/80 text-sm">Admin Paneli</span>
+        <div className="max-w-7xl mx-auto px-4 pt-10">
+            <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-gray-200 pb-6 mb-8">
+                <div>
+                    <h1 className="text-3xl font-bold text-[#001b48] tracking-tight">
+                        Admin Dashboard
+                    </h1>
                 </div>
-                <div className="flex items-center gap-4">
-                    <span className="text-white/60 text-sm hidden md:block">Hoş geldiniz, <strong className="text-white">{adminUser}</strong></span>
-                    <Link to="/" className="text-white/70 hover:text-white text-sm transition">Siteye Dön</Link>
-                    <button onClick={handleLogout} className="bg-white/10 hover:bg-white/20 text-white text-sm px-3 py-1.5 rounded-lg transition">
-                        Çıkış
-                    </button>
+                
+                <div className="mt-4 md:mt-0">
+                    <Link 
+                        to="/" 
+                        className="text-sm font-bold text-[#001b48]/60 hover:text-[#001b48] transition flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-xl"
+                    >
+                        ← Return to FlyTicket
+                    </Link>
                 </div>
             </div>
-
+        </div>
+       
             <div className="max-w-7xl mx-auto px-4 py-8">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     {[
-                        { label: 'Toplam Uçuş', value: flights.length, icon: '✈', color: 'bg-blue-50 text-blue-700' },
-                        { label: 'Toplam Bilet', value: tickets.length, icon: '🎫', color: 'bg-green-50 text-green-700' },
-                        { label: 'Dolu Uçuş', value: flights.filter(f => f.seats_available === 0).length, icon: '🔴', color: 'bg-red-50 text-red-700' },
-                        { label: 'Boş Koltuklar', value: flights.reduce((a, f) => a + f.seats_available, 0), icon: '💺', color: 'bg-yellow-50 text-yellow-700' },
+                        { label: 'Total Flights', value: flights.length, color: 'bg-gray-50 text-gray-700' },
+                        { label: 'Total Tickets', value: tickets.length,  color: 'bg-gray-50 text-gray-700' },
+                        { label: 'Filled Flights', value: flights.filter(f => f.seats_available === 0).length,color:'bg-gray-50 text-gray-700' },
+                        { label: 'Available Seats', value: flights.reduce((a, f) => a + f.seats_available, 0),color: 'bg-gray-50 text-gray-700' },
                     ].map(stat => (
                         <div key={stat.label} className={`rounded-2xl p-4 ${stat.color}`}>
                             <div className="text-2xl mb-1">{stat.icon}</div>
@@ -103,7 +107,7 @@ export default function AdminDashboardPage() {
 
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
                     <div className="flex gap-1 bg-gray-200 rounded-xl p-1">
-                        {[['flights', 'Uçuşlar'], ['tickets', 'Biletler']].map(([tab, label]) => (
+                        {[['flights', 'Flights'], ['tickets', 'Tickets']].map(([tab, label]) => (
                             <button
                                 key={tab}
                                 onClick={() => { setActiveTab(tab); setSearchQ(''); }}
@@ -126,14 +130,14 @@ export default function AdminDashboardPage() {
                                 to="/admin/flights/new"
                                 className="bg-[#ffbc00] hover:bg-[#e6a800] text-[#001b48] font-bold px-4 py-2 rounded-xl text-sm transition whitespace-nowrap shadow"
                             >
-                                + Uçuş Ekle
+                                + Add Flight
                             </Link>
                         )}
                     </div>
                 </div>
 
                 {loading ? (
-                    <div className="text-center py-20 text-gray-400 animate-pulse text-lg">Yükleniyor...</div>
+                    <div className="text-center py-20 text-gray-400 animate-pulse text-lg">Loading...</div>
                 ) : activeTab === 'flights' ? (
                     <FlightsTable flights={filteredFlights} onDelete={id => setDeleteId(id)} />
                 ) : (
@@ -144,12 +148,12 @@ export default function AdminDashboardPage() {
             {deleteId && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
                     <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full">
-                        <h3 className="text-xl font-bold text-[#001b48] mb-2">Uçuşu Sil</h3>
-                        <p className="text-gray-500 text-sm mb-6">Bu uçuş ve ilgili tüm biletler kalıcı olarak silinecek. Emin misiniz?</p>
+                        <h3 className="text-xl font-bold text-[#001b48] mb-2">Delete Flight</h3>
+                        <p className="text-gray-500 text-sm mb-6">This flight and all related tickets will be permanently deleted. Are you sure?</p>
                         <div className="flex gap-3">
                             <button onClick={() => setDeleteId(null)} className="flex-1 border-2 border-gray-300 text-gray-600 font-bold py-2 rounded-xl hover:border-[#001b48] transition">İptal</button>
                             <button onClick={() => handleDelete(deleteId)} disabled={deleting} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-xl transition disabled:opacity-60">
-                                {deleting ? 'Siliniyor...' : 'Sil'}
+                                {deleting ? 'Processing...' : 'Delete'}
                             </button>
                         </div>
                     </div>
@@ -163,7 +167,7 @@ function FlightsTable({ flights, onDelete }) {
     if (flights.length === 0) return (
         <div className="text-center py-20 text-gray-400">
             <div className="text-5xl mb-3">✈</div>
-            <p>Uçuş bulunamadı.</p>
+            <p>Flight not found.</p>
         </div>
     );
     return (
@@ -172,12 +176,12 @@ function FlightsTable({ flights, onDelete }) {
                 <table className="w-full text-sm">
                     <thead>
                         <tr className="bg-gray-50 border-b border-gray-100">
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Rota</th>
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Kalkış</th>
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Varış</th>
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Fiyat</th>
-                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Koltuklar</th>
-                            <th className="text-right px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">İşlemler</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Route</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Departure</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Arrival</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Price</th>
+                            <th className="text-left px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Seats</th>
+                            <th className="text-right px-4 py-3 font-semibold text-gray-500 uppercase tracking-wider text-xs">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -213,10 +217,10 @@ function FlightsTable({ flights, onDelete }) {
                                 <td className="px-4 py-4">
                                     <div className="flex gap-2 justify-end">
                                         <Link to={`/admin/flights/edit/${flight.id}`} className="bg-[#001b48] text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-[#002a6e] transition">
-                                            Düzenle
+                                            Edit
                                         </Link>
                                         <button onClick={() => onDelete(flight.id)} className="bg-red-50 text-red-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-100 transition border border-red-200">
-                                            Sil
+                                            Delete
                                         </button>
                                     </div>
                                 </td>

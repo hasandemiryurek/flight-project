@@ -75,7 +75,7 @@ export default function AdminFlightFormPage() {
     return (
         <div className="min-h-screen bg-gray-50 py-10 px-4">
             <div className="max-w-2xl mx-auto">
-                <Link to="/admin" className="text-gray-400 hover:text-[#001b48] transition font-medium mb-6 inline-block">← Admin Paneli</Link>
+                <Link to="/admin" className="text-gray-400 hover:text-[#001b48] transition font-medium mb-6 inline-block">← Admin Panel</Link>
                 <h1 className="text-3xl font-bold text-[#001b48] mb-6">
                     {isEdit ? 'Uçuşu Düzenle' : 'Yeni Uçuş Ekle'}
                 </h1>
