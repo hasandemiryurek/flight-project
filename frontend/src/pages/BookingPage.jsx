@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchFlightById, bookTicket } from '../api';
 
-const formatTime = (dt) => new Date(dt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-const formatDate = (dt) => new Date(dt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
+const formatTime = (dt) => new Date(dt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+const formatDate = (dt) => new Date(dt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
+ 
 const duration = (dep, arr) => {
     const diff = new Date(arr) - new Date(dep);
     const h = Math.floor(diff / 3600000);

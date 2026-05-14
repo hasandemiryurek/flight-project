@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { fetchCities, createFlight, updateFlight, fetchFlightById } from '../api';
 import { useAuth } from '../context/AuthContext';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function AdminFlightFormPage() {
     const { id } = useParams();
@@ -17,50 +19,50 @@ export default function AdminFlightFormPage() {
     const [form, setForm] = useState({
         from_city_id: '',
         to_city_id: '',
-        departure_time: '',
-        arrival_time: '',
+        departure_time: null,
+        arrival_time: null,
         price: '',
         seats_total: '',
     });
 
     useEffect(() => {
         if (!isAdmin) { navigate('/admin/login'); return; }
-        fetchCities().then(setCities).catch(() => setError('Şehirler yüklenemedi.'));
+        fetchCities().then(setCities).catch(() => setError('Cities could not be loaded.'));
         if (isEdit) {
             fetchFlightById(id).then(flight => {
                 setForm({
                     from_city_id: flight.from_city_id,
                     to_city_id: flight.to_city_id,
-                    departure_time: toLocalDatetime(flight.departure_time),
-                    arrival_time: toLocalDatetime(flight.arrival_time),
+                    departure_time: new Date(flight.departure_time),
+                    arrival_time: new Date(flight.arrival_time),
                     price: flight.price,
                     seats_total: flight.seats_total,
                 });
-            }).catch(() => setError('Uçuş bulunamadı.'));
+            }).catch(() => setError('Flight not found.'));
         }
     }, [id, isAdmin, navigate, isEdit]);
-
-    const toLocalDatetime = (iso) => {
-        const d = new Date(iso);
-        const pad = n => String(n).padStart(2, '0');
-        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccess('');
         if (form.from_city_id === form.to_city_id) { setError('The departure and arrival cities cannot be the same.'); return; }
-        if (new Date(form.arrival_time) <= new Date(form.departure_time)) { setError('The arrival time must be after the departure time.'); return; }
+        if (!form.departure_time || !form.arrival_time) { setError('Please select departure and arrival times.'); return; }
+        if (form.arrival_time <= form.departure_time) { setError('The arrival time must be after the departure time.'); return; }
         setLoading(true);
         try {
+            const payload = {
+                ...form,
+                departure_time: form.departure_time.toISOString(),
+                arrival_time: form.arrival_time.toISOString(),
+            };
             if (isEdit) {
-                await updateFlight(id, form);
+                await updateFlight(id, payload);
                 setSuccess('Flight updated successfully!');
             } else {
-                await createFlight(form);
+                await createFlight(payload);
                 setSuccess('Flight created successfully!');
-                setForm({ from_city_id: '', to_city_id: '', departure_time: '', arrival_time: '', price: '', seats_total: '' });
+                setForm({ from_city_id: '', to_city_id: '', departure_time: null, arrival_time: null, price: '', seats_total: '' });
             }
             setTimeout(() => navigate('/admin'), 1200);
         } catch (err) {
@@ -102,11 +104,35 @@ export default function AdminFlightFormPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-600 mb-1">Departure Time</label>
-                                <input type="datetime-local" className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#001b48] focus:outline-none transition" value={form.departure_time} onChange={e => field('departure_time', e.target.value)} required />
+                                <DatePicker
+                                    selected={form.departure_time}
+                                    onChange={d => field('departure_time', d)}
+                                    showTimeSelect
+                                    timeIntervals={30}
+                                    dateFormat="dd/MM/yyyy HH:mm"
+                                    timeFormat="HH:mm"
+                                    placeholderText="dd/mm/yyyy hh:mm"
+                                    onChangeRaw={e => e.preventDefault()}
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#001b48] focus:outline-none transition"
+                                    wrapperClassName="w-full"
+                                    required
+                                />
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-gray-600 mb-1">Arrival Time</label>
-                                <input type="datetime-local" className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#001b48] focus:outline-none transition" value={form.arrival_time} onChange={e => field('arrival_time', e.target.value)} required />
+                                <DatePicker
+                                    selected={form.arrival_time}
+                                    onChange={d => field('arrival_time', d)}
+                                    showTimeSelect
+                                    timeIntervals={30}
+                                    dateFormat="dd/MM/yyyy HH:mm"
+                                    timeFormat="HH:mm"
+                                    placeholderText="dd/mm/yyyy hh:mm"
+                                    onChangeRaw={e => e.preventDefault()}
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#001b48] focus:outline-none transition"
+                                    wrapperClassName="w-full"
+                                    required
+                                />
                             </div>
                         </div>
 
@@ -132,8 +158,6 @@ export default function AdminFlightFormPage() {
                         </div>
                     </form>
                 </div>
-
-                
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 
-const formatTime = (dt) => new Date(dt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-const formatDate = (dt) => new Date(dt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
+const formatTime = (dt) => new Date(dt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+const formatDate = (dt) => new Date(dt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
 
 export default function ConfirmationPage() {
     const { state } = useLocation();
@@ -34,7 +34,7 @@ export default function ConfirmationPage() {
 
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100" id="ticket">
                     <div className="bg-[#001b48] px-6 py-4 flex items-center justify-between">
-                        <span className="text-[#ffbc00] font-bold text-xl">✈ FlyTicket</span>
+                        <span className="text-[#ffbc00] font-bold text-xl"> FlyTicket</span>
                         <span className="text-white/60 text-sm font-mono">Ticket No: {ticket.id?.slice(-8).toUpperCase()}</span>
                     </div>
 

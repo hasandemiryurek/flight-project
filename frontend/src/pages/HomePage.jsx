@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCities, searchFlights } from '../api';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const formatTime = (dt) => new Date(dt).toString('en-US', { hour: '2-digit', minute: '2-digit' });
 const formatDate = (dt) => new Date(dt).toString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -16,7 +18,7 @@ export default function HomePage() {
     const [cities, setCities] = useState([]);
     const [fromCity, setFromCity] = useState('');
     const [toCity, setToCity] = useState('');
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState(null);
     const [flights, setFlights] = useState([]);
     const [searched, setSearched] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -33,7 +35,7 @@ export default function HomePage() {
         setError('');
         setLoading(true);
         try {
-            const data = await searchFlights({ from: fromCity, to: toCity, date });
+            const data = await searchFlights({ from: fromCity, to: toCity, date: date ? date.toISOString().split('T')[0] : '' });
             setFlights(data);
             setSearched(true);
         } catch {
@@ -102,19 +104,23 @@ export default function HomePage() {
                                 </div>
 
                                 <div className="flex-1 w-full">
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Date</label>
-                                    <input
-                                        type="date"
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-[#001b48] font-semibold focus:border-[#001b48] focus:outline-none bg-white transition"
-                                        value={date}
-                                        onChange={e => setDate(e.target.value)}
-                                    />
-                                </div>
+    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Date</label>
+    <DatePicker
+        selected={date}
+        onChange={d => setDate(d)}
+        dateFormat="dd/MM/yyyy"
+         onChangeRaw={e => e.preventDefault()}  
+        placeholderText="dd/mm/yyyy"
+        locale="en"
+        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-[#001b48] font-semibold focus:border-[#001b48] focus:outline-none bg-white transition"
+        wrapperClassName="w-full"
+    />
+</div>
 
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full md:w-auto bg-[#ffbc00] hover:bg-[#e6a800] text-[#001b48] font-bold px-8 py-3 rounded-xl transition text-sm uppercase tracking-wider shadow-md disabled:opacity-60 flex-shrink-0"
+                                    className="w-full md:w-auto bg-[#ffbc00] hover:bg-[#e6a800] text-[#001b48] font-bold px-8 py-4 rounded-xl transition text-sm uppercase tracking-wider shadow-md disabled:opacity-60 flex-shrink-0"
                                 >
                                     {loading ? 'Searching...' : 'Search Flights'}
                                 </button>
@@ -161,7 +167,7 @@ export default function HomePage() {
 
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-    {/* SOL BÜYÜK KART - İSTANBUL */}
+    {/* ANKARA */}
     <div className="relative h-[600px] rounded-3xl overflow-hidden group cursor-pointer">
       <img
         src="https://i.pinimg.com/1200x/cb/41/82/cb4182ca7b8e815f2237a3c9859c4796.jpg"
@@ -176,10 +182,10 @@ export default function HomePage() {
       </div>
     </div>
 
-    {/* SAĞ TARAF */}
+    {/* RIGHT PART */}
     <div className="flex flex-col gap-6">
 
-      {/* ÜST GENİŞ - ANTALYA */}
+      {/* TOP - ANTALYA */}
       <div className="relative h-[290px] rounded-3xl overflow-hidden group cursor-pointer">
         <img
           src="https://i.pinimg.com/736x/98/72/24/987224b0e091918557791fd5df149413.jpg"
@@ -194,7 +200,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ALT 2 KART */}
+      {/* BOTTOM  */}
       <div className="grid grid-cols-2 gap-6">
 
         {/* İZMİR */}
@@ -212,7 +218,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ANKARA */}
+        {/* İSTANBUL */}
         <div className="relative h-[290px] rounded-3xl overflow-hidden group cursor-pointer">
           <img
             src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200"

@@ -3,8 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { fetchAllFlights, deleteFlight, fetchAllTickets } from '../api';
 import { useAuth } from '../context/AuthContext';
 
-const formatTime = (dt) => new Date(dt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-const formatDate = (dt) => new Date(dt).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+const formatTime = (dt) => new Date(dt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+const formatDate = (dt) => new Date(dt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
 export default function AdminDashboardPage() {
     const navigate = useNavigate();

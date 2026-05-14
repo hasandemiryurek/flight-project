@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
         <div className="min-h-screen bg-[#001b48] flex items-center justify-center px-4">
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
-                    <span className="text-4xl font-bold text-[#ffbc00]">✈ FlyTicket</span>
+                    <span className="text-4xl font-bold text-[#ffbc00]"> FlyTicket</span>
                     <p className="text-white/60 mt-2 text-sm">Admin Panel</p>
                 </div>
                 <div className="bg-white rounded-2xl shadow-2xl p-8">
