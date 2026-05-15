@@ -107,44 +107,8 @@ To access the admin dashboard, use the following default credentials:
 
 ---
 
-##  API Endpoints
 
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :---: |
-| `GET` | `/api/flights` | List all flights | No |
-| `GET` | `/api/flights/search` | Search flights based on criteria | No |
-| `GET` | `/api/flights/:id` | Get specific flight details | No |
-| `POST` | `/api/flights` | Create a new flight | **Yes (Admin)** |
-| `PUT` | `/api/flights/:id` | Update an existing flight | **Yes (Admin)** |
-| `DELETE` | `/api/flights/:id` | Delete a flight | **Yes (Admin)** |
-| `POST` | `/api/tickets` | Book a new ticket | No |
-| `GET` | `/api/tickets/:email` | Get tickets by user email | No |
-| `GET` | `/api/tickets/all` | List all booked tickets | **Yes (Admin)** |
-| `GET` | `/api/cities` | List all 81 cities of Türkiye | No |
-| `POST` | `/api/admin/login` | Authenticate admin & receive JWT | No |
 
----
-
-##  Project Structure
-
-```text
-flight-project/
-├── backend/
-│   ├── prisma/
-│   │   ├── schema.prisma       # Database schema & models (City, Flight, Ticket, Admin)
-│   │   └── seed.js             # Initial mock data
-│   └── src/
-│       ├── controllers/        # Request handlers & logic
-│       ├── routes/             # Express API routes
-│       └── middleware/         # JWT Auth & Rule Validation
-├── frontend/
-│   └── src/
-│       ├── pages/              # React views (Home, Admin, Booking)
-│       ├── components/         # Reusable UI components (Flight Cards, Forms)
-│       ├── context/            # State management
-│       └── api/                # Axios API calls
-└── database.sql                # SQL database dump
-```
 
 ---
 <div align="center">
